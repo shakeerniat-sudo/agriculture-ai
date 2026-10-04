@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="AgriGuide AI combines crop, soil, weather, irrigation and crop-health analysis into practical farm recommendations."
+    />
+    <meta name="theme-color" content="#004d40" />
+    <title>AgriGuide AI — Smarter farming, powered by AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="AgriGuide AI home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48" role="img">
+              <path d="M24 39V18" />
+              <path d="M24 27C13 27 9 21 10 11c10 0 16 4 14 16Z" />
+              <path d="M24 22c1-9 7-14 17-14 1 10-4 17-17 18" />
+              <circle cx="24" cy="39" r="2" />
+            </svg>
+          </span>
+          <span class="brand-copy">
+            <span class="brand-name">AgriGuide <i>AI</i></span>
+            <span class="brand-tagline">AI AGRICULTURE DECISION SUPPORT</span>
+          </span>
+        </a>
+
+        <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+          <a href="#top">Home</a>
+          <a href="#farm-advisor">Farm Advisor</a>
+          <a href="#crop-health">Crop Health</a>
+          <a href="#irrigation">Irrigation</a>
+          <a href="#ai-report">AI Reports</a>
+          <a href="#about">About</a>
+        </nav>
+
+        <a class="header-cta" href="#farm-advisor">
+          <span>Start Analysis</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-grid-pattern" aria-hidden="true"></div>
+        <div class="hero-glow hero-glow-one" aria-hidden="true"></div>
+        <div class="hero-glow hero-glow-two" aria-hidden="true"></div>
+        <div class="container hero-inner">
+          <div class="hero-copy">
+            <p class="hero-kicker"><span></span> AI-POWERED AGRICULTURE</p>
+            <h1>Smarter Farming,<br />Powered by <em>AI.</em></h1>
+            <p class="hero-description">
+              Understand your crop, soil, weather and irrigation conditions with an intelligent agriculture AI Agent.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-lime" href="#farm-advisor">
+                Start Farm Analysis <span aria-hidden="true">↗</span>
+              </a>
+              <a class="button button-outline" href="#intelligence">Explore AgriGuide AI</a>
+            </div>
+            <div class="hero-proof">
+              <span class="proof-rule"></span>
+              <span>Field conditions in. Clear decisions out.</span>
+            </div>
+          </div>
+
+          <div class="hero-art" aria-label="Original AgriGuide AI crop intelligence illustration">
+            <div class="orbit orbit-outer"></div>
+            <div class="orbit orbit-inner"></div>
+            <div class="orbit-dot orbit-dot-a"></div>
+            <div class="orbit-dot orbit-dot-b"></div>
+            <div class="orbit-dot orbit-dot-c"></div>
+            <div class="art-tag tag-crop"><span class="tag-icon">↗</span><span><b>Crop intelligence</b><small>Field-aware insights</small></span></div>
+            <div class="art-tag tag-weather"><span class="tag-icon">◌</span><span><b>Weather context</b><small>Conditions considered</small></span></div>
+            <svg class="hero-plant" viewBox="0 0 430 520" role="img" aria-labelledby="plant-title">
+              <title id="plant-title">Abstract AgriGuide AI growing plant illustration</title>
+              <defs>
+                <linearGradient id="stem" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#d8e800" />
+                  <stop offset="1" stop-color="#80a948" />
+                </linearGradient>
+                <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#d8e800" stop-opacity=".96" />
+                  <stop offset="1" stop-color="#7aa947" stop-opacity=".78" />
+                </linearGradient>
+              </defs>
+              <path class="plant-stem" d="M218 433C219 362 211 306 220 238c5-39 13-73 37-111" />
+              <path class="plant-stem thin-stem" d="M218 344c-23-28-47-47-77-58M220 287c26-23 54-38 86-49" />
+              <path class="plant-leaf leaf-left" d="M146 286C94 284 67 254 61 204c52-7 96 7 111 50 6 17 0 25-26 32Z" />
+              <path class="plant-leaf leaf-right" d="M294 241c13-48 53-72 106-68-3 52-27 88-75 96-18 3-25-6-31-28Z" />
+              <path class="plant-leaf leaf-top" d="M251 154c-32-36-29-78 5-121 40 32 57 71 37 113-8 17-19 18-42 8Z" />
+              <path class="leaf-vein" d="M74 211c31 16 60 36 88 65M387 186c-25 22-50 46-77 78M261 46c4 29 9 61 19 95" />
+              <path class="ground-line" d="M121 435h190" />
+              <path class="ground-line ground-line-small" d="M156 453h123" />
+              <circle class="plant-node" cx="218" cy="342" r="7" />
+              <circle class="plant-node" cx="220" cy="285" r="6" />
+              <circle class="plant-node" cx="238" cy="232" r="5" />
+            </svg>
+            <div class="ai-seal"><span>AG</span><b>AI</b><small>FIELD INTELLIGENCE</small></div>
+            <div class="art-caption"><span class="caption-pulse"></span> Four specialist tools · one farm report</div>
+          </div>
+        </div>
+        <div class="container hero-capabilities" aria-label="Agriculture advisor capabilities">
+          <span class="capability-heading">AI AGRICULTURE ADVISOR</span>
+          <span class="capability"><i>01</i> Crop intelligence</span>
+          <span class="capability"><i>02</i> Irrigation guidance</span>
+          <span class="capability"><i>03</i> Weather analysis</span>
+          <span class="capability"><i>04</i> Crop health</span>
+        </div>
+      </section>
+
+      <section class="section intelligence-section" id="intelligence">
+        <div class="container">
+          <div class="section-intro">
+            <div>
+              <p class="section-eyebrow">A more considered way to farm</p>
+              <h2>AI that understands<br />your farm.</h2>
+            </div>
+            <p class="section-lede">
+              AgriGuide AI combines specialized agriculture analysis tools with Gemini AI to provide personalized recommendations grounded in the conditions you share.
+            </p>
+          </div>
+
+          <div class="process-grid">
+            <article class="process-item">
+              <span class="process-index">01</span>
+              <span class="process-icon" aria-hidden="true">◉</span>
+              <h3>Understand</h3>
+              <p>Analyze crop, soil and environmental conditions with focused agriculture tools.</p>
+            </article>
+            <article class="process-item">
+              <span class="process-index">02</span>
+              <span class="process-icon" aria-hidden="true">⌘</span>
+              <h3>Reason</h3>
+              <p>An AI Agent combines specialist findings and Gemini reasoning into one view.</p>
+            </article>
+            <article class="process-item">
+              <span class="process-index">03</span>
+              <span class="process-icon" aria-hidden="true">↗</span>
+              <h3>Act</h3>
+              <p>Get clear next steps and precautions, then read your report in your language.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="advisor-section" id="farm-advisor">
+        <div class="container">
+          <div class="advisor-heading">
+            <div>
+              <p class="section-eyebrow">Your field, in context</p>
+              <h2>Tell AgriGuide AI<br />about your farm.</h2>
+            </div>
+            <p>Share what you know about your field. The AI Agent will bring crop, irrigation, weather and crop-health analysis together.</p>
+          </div>
+
+          <div class="advisor-layout">
+            <form class="farm-form" id="analysis-form">
+              <div class="form-topline"><span>FARM ADVISOR</span><span class="secure-note"><i></i> Private to this session</span></div>
+              <div class="form-grid">
+                <div class="field-group">
+                  <label for="crop">Crop</label>
+                  <input id="crop" name="crop" type="text" list="crop-options" maxlength="60" placeholder="Choose or type a crop" autocomplete="off" required />
+                  <datalist id="crop-options">
+                    <option value="Rice"></option>
+                    <option value="Wheat"></option>
+                    <option value="Maize"></option>
+                    <option value="Cotton"></option>
+                    <option value="Groundnut"></option>
+                    <option value="Sugarcane"></option>
+                    <option value="Tomato"></option>
+                    <option value="Soybean"></option>
+                    <option value="Chickpea"></option>
+                    <option value="Pigeon pea"></option>
+                    <option value="Mustard"></option>
+                    <option value="Millet"></option>
+                    <option value="Sorghum"></option>
+                    <option value="Potato"></option>
+                    <option value="Onion"></option>
+                    <option value="Banana"></option>
+                    <option value="Chilli"></option>
+                  </datalist>
+                  <small class="field-hint">Choose a suggestion or type another crop name.</small>
+                </div>
+                <div class="field-group">
+                  <label for="soil_type">Soil type</label>
+                  <select id="soil_type" name="soil_type" required>
+                    <option value="">Choose soil type</option>
+                    <option>Loamy</option><option>Clay</option><option>Sandy</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label for="season">Season</label>
+                  <select id="season" name="season" required>
+                    <option value="">Choose season</option>
+                    <option>Kharif</option><option>Rabi</option><option>Summer</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label for="soil_moisture">Soil moisture <small>%</small></label>
+                  <input id="soil_moisture" name="soil_moisture" type="number" min="0" max="100" step="any" placeholder="e.g. 38" required />
+                </div>
+                <div class="field-group">
+                  <label for="temperature">Temperature <small>°C</small></label>
+                  <input id="temperature" name="temperature" type="number" step="any" placeholder="e.g. 29" required />
+                </div>
+                <div class="field-group">
+                  <label for="rainfall">Rainfall <small>mm</small></label>
+                  <input id="rainfall" name="rainfall" type="number" min="0" step="any" placeholder="e.g. 12" required />
+                </div>
+                <div class="field-group">
+                  <label for="rain_probability">Rain probability <small>%</small></label>
+                  <input id="rain_probability" name="rain_probability" type="number" min="0" max="100" step="any" placeholder="e.g. 45" required />
+                </div>
+                <div class="field-group full-width" id="crop-health">
+                  <label for="crop_problem">Crop problem or symptoms</label>
+                  <textarea id="crop_problem" name="crop_problem" rows="4" placeholder="Describe what you see in the field, for example: lower leaves turning yellow..." required></textarea>
+                </div>
+              </div>
+              <div class="form-bottom">
+                <p>Recommendations are decision support and should be checked against field conditions.</p>
+                <button class="button button-dark" id="analyze-button" type="submit">
+                  <span class="button-text">🤖 Analyze My Farm</span>
+                  <span class="button-loader hidden" aria-hidden="true"></span>
+                  <span class="button-arrow" aria-hidden="true">↗</span>
+                </button>
+              </div>
+              <p class="status-message" id="status-message" role="status" aria-live="polite"></p>
+            </form>
+
+            <aside class="advisor-aside" id="irrigation">
+              <div class="aside-marker">AGRICULTURE INTELLIGENCE <span>AG·01</span></div>
+              <div class="aside-graphic" aria-hidden="true">
+                <span class="graphic-ring ring-one"></span>
+                <span class="graphic-ring ring-two"></span>
+                <span class="graphic-seed">AI</span>
+                <span class="graphic-leaf leaf-one">⌁</span>
+                <span class="graphic-leaf leaf-two">⌁</span>
+                <span class="graphic-dot"></span>
+              </div>
+              <h3>Every field<br />has a story.</h3>
+              <p>Bring local observations together with crop-specific reasoning. Get a practical view of what to watch and what to do next.</p>
+              <ul class="tool-list">
+                <li><span>01</span> Crop suitability</li>
+                <li><span>02</span> Irrigation guidance</li>
+                <li><span>03</span> Weather context</li>
+                <li><span>04</span> Symptom review</li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section-wrap" id="ai-report">
+        <div class="container">
+          <div class="report-placeholder" id="report-placeholder">
+            <span class="report-symbol" aria-hidden="true">✳</span>
+            <p class="section-eyebrow">Your next decision, made clearer</p>
+            <h2>Your Agriculture<br />Intelligence Report</h2>
+            <p>Your personalized report will appear here after the farm analysis is complete.</p>
+            <a href="#farm-advisor" class="text-link">Start with your farm details <span aria-hidden="true">↗</span></a>
+          </div>
+          <article class="report-card hidden" id="report-card" aria-live="polite">
+            <div class="report-top">
+              <div>
+                <p class="section-eyebrow">AGRIGUIDE AI · FIELD ADVISORY</p>
+                <h2>Your Agriculture Intelligence Report</h2>
+              </div>
+              <span class="report-status"><i></i> AI analysis complete</span>
+            </div>
+            <div class="result-content" id="result-content"></div>
+            <div class="translation-area">
+              <div>
+                <p class="translation-title">Read your report in your language</p>
+                <p class="translation-subtitle">Translations are always made from the original AI report.</p>
+              </div>
+              <form class="translation-form" id="translation-form">
+                <label class="sr-only" for="language-select">Choose report language</label>
+                <select id="language-select" name="language">
+                  <option value="English">English</option>
+                  <option value="Telugu">తెలుగు</option>
+                  <option value="Hindi">हिन्दी</option>
+                  <option value="Tamil">தமிழ்</option>
+                  <option value="Kannada">ಕನ್ನಡ</option>
+                </select>
+                <button class="button button-dark" id="translate-button" type="submit">
+                  <span class="translate-button-text">🌐 Translate Report</span>
+                  <span class="translate-loader hidden" aria-hidden="true"></span>
+                </button>
+              </form>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="about-section" id="about">
+        <div class="container about-inner">
+          <div>
+            <p class="section-eyebrow">Built on focused reasoning</p>
+            <h2>One agent.<br /><span>Four perspectives.</span></h2>
+          </div>
+          <div class="about-copy">
+            <p>AgriGuide AI is more than a chat interface. Its agriculture agent runs separate crop, irrigation, weather and crop-health analysis tools, then uses Gemini to synthesize a structured report.</p>
+            <div class="architecture">
+              <span>FARM INPUT</span><b>→</b><span>SPECIALIST TOOLS</span><b>→</b><span>GEMINI AI</span><b>→</b><span>FIELD REPORT</span>
+            </div>
+            <p class="disclaimer">AI-generated recommendations support decision-making only. For severe crop damage, disease identification, or pesticide and fertilizer decisions, consult a qualified agricultural expert.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <a class="brand footer-brand" href="#top">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><path d="M24 39V18" /><path d="M24 27C13 27 9 21 10 11c10 0 16 4 14 16Z" /><path d="M24 22c1-9 7-14 17-14 1 10-4 17-17 18" /><circle cx="24" cy="39" r="2" /></svg>
+          </span>
+          <span class="brand-copy"><span class="brand-name">AgriGuide <i>AI</i></span><span class="brand-tagline">AI AGRICULTURE DECISION SUPPORT</span></span>
+        </a>
+        <p>Better-informed decisions, rooted in the field.</p>
+        <a class="back-top" href="#top">Back to top ↑</a>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
