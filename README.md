@@ -8,7 +8,7 @@ Farmers often have to depend on fragmented advice and manual interpretation of s
 
 ## Solution
 
-AgriGuide AI brings these inputs together in one analytical system. A farmer enters crop, soil, season, location, and crop symptoms. The backend fetches current weather and the next 24-hour precipitation forecast from OpenWeather, then combines these with the farmer's crop and soil information and specialized analysis tools. Groq generates a structured agricultural report in simple farming language.
+AgriGuide AI brings these inputs together in one analytical system. A farmer enters crop, soil, season, location, and a farming question or request. The backend fetches current weather and the next 24-hour precipitation forecast from OpenWeather, then combines these with the farmer's information and specialized analysis tools. Groq generates a structured agricultural report in simple farming language that addresses the farmer's request, whether it concerns crop selection, crop health, irrigation, weather, soil, pests or disease, or another farming question.
 
 ## Features
 
@@ -37,13 +37,7 @@ Farmer -> Web UI -> Flask Backend -> OpenWeather current conditions and forecast
 
 ## Agriculture report sections
 
-Each AI report contains five detailed sections in a consistent order:
-
-1. Agriculture Analysis — crop, soil, and season context, including a clearly labeled Weather Report Analysis subsection for local current conditions, observed recent rainfall, and the separate 24-hour forecast.
-2. Irrigation Recommendation — moisture- and forecast-aware guidance with cues for reassessment.
-3. Crop Problem Analysis — cautious possible causes, field observations, and when to seek local expertise.
-4. Recommended Actions — prioritized immediate and near-term steps with reasons and monitoring cues.
-5. Important Precautions — relevant weather, field, and safe-input-use cautions.
+Each report includes a crop analysis based on the entered crop and farm conditions, followed by actions and suggestions tailored to the farmer's actual request. Crop-selection requests receive alternative crop recommendations; symptom reports receive cautious symptom analysis and practical next steps; irrigation, weather, soil, and pest or disease questions receive focused guidance; general farming questions are answered directly. Crop-health diagnoses are not invented for unrelated requests.
 
 Recommendations must use the supplied farm data and must not invent a diagnosis, crop stage, or unsupported input dosage.
 

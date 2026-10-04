@@ -19,10 +19,11 @@ function setStatus(message, type = '') {
 }
 
 function setAnalyzeLoading(isLoading) {
-  const label = analyzeButton.querySelector('.button-text');
+  const label = analyzeButton.querySelector('.button-label');
   const loader = analyzeButton.querySelector('.button-loader');
   analyzeButton.disabled = isLoading;
-  label.textContent = isLoading ? 'AI Agent is analyzing your farm…' : '🤖 Analyze My Farm';
+  label.textContent = isLoading ? 'AI Agent is analyzing your farm…' : 'Analyze My Farm';
+  analyzeButton.classList.toggle('is-loading', isLoading);
   loader.classList.toggle('hidden', !isLoading);
 }
 
@@ -134,7 +135,7 @@ function validateFarmPayload(payload) {
     if (max !== undefined && value > max) return `${label} must be no more than ${max}.`;
   }
   if (!payload.crop || !payload.soil_type || !payload.season || !payload.location || !payload.crop_problem) {
-    return 'Complete each farm detail, enter your location, and describe the crop problem before analyzing.';
+    return 'Complete each farm detail, enter your location, and add your farming question or request before analyzing.';
   }
   return '';
 }

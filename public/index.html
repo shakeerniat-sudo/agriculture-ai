@@ -104,7 +104,9 @@
               <path class="plant-leaf leaf-left" d="M146 286C94 284 67 254 61 204c52-7 96 7 111 50 6 17 0 25-26 32Z" />
               <path class="plant-leaf leaf-right" d="M294 241c13-48 53-72 106-68-3 52-27 88-75 96-18 3-25-6-31-28Z" />
               <path class="plant-leaf leaf-top" d="M251 154c-32-36-29-78 5-121 40 32 57 71 37 113-8 17-19 18-42 8Z" />
-              <path class="leaf-vein" d="M74 211c31 16 60 36 88 65M387 186c-25 22-50 46-77 78M261 46c4 29 9 61 19 95" />
+              <path class="leaf-vein vein-left" d="M74 211c31 16 60 36 88 65" />
+              <path class="leaf-vein vein-right" d="M387 186c-25 22-50 46-77 78" />
+              <path class="leaf-vein vein-top" d="M261 46c4 29 9 61 19 95" />
               <path class="ground-line" d="M121 435h190" />
               <path class="ground-line ground-line-small" d="M156 453h123" />
               <circle class="plant-node" cx="218" cy="342" r="7" />
@@ -221,14 +223,14 @@
                   <small class="field-hint">Used to fetch current weather and the next 24-hour forecast.</small>
                 </div>
                 <div class="field-group full-width" id="crop-health">
-                  <label for="crop_problem">Crop problem or symptoms</label>
-                  <textarea id="crop_problem" name="crop_problem" rows="4" placeholder="Describe what you see in the field, for example: lower leaves turning yellow..." required></textarea>
+                  <label for="crop_problem">Your farming question or request</label>
+                  <textarea id="crop_problem" name="crop_problem" rows="4" placeholder="Ask about changing crops, irrigation, weather, soil, pests, symptoms, or another farming question..." required></textarea>
                 </div>
               </div>
               <div class="form-bottom">
                 <p>Recommendations are decision support and should be checked against field conditions.</p>
                 <button class="button button-dark" id="analyze-button" type="submit">
-                  <span class="button-text">🤖 Analyze My Farm</span>
+                  <span class="button-text"><span class="robot-icon" aria-hidden="true">🤖</span><span class="button-label">Analyze My Farm</span></span>
                   <span class="button-loader hidden" aria-hidden="true"></span>
                   <span class="button-arrow" aria-hidden="true">↗</span>
                 </button>

@@ -434,11 +434,32 @@ textarea:focus-visible {
   fill: url(#leaf);
   stroke: rgba(216, 232, 0, .75);
   stroke-width: 1.1;
+  transform-box: view-box;
+  animation: leaf-sway 3.2s ease-in-out infinite;
+}
+
+.leaf-left,
+.vein-left {
+  transform-origin: 146px 286px;
+}
+
+.leaf-right,
+.vein-right {
+  transform-origin: 300px 241px;
+  animation-delay: -1.1s;
+}
+
+.leaf-top,
+.vein-top {
+  transform-origin: 251px 154px;
+  animation-delay: -2.2s;
 }
 
 .leaf-vein {
   stroke: rgba(0, 77, 64, .58);
   stroke-width: 2.5;
+  transform-box: view-box;
+  animation: leaf-sway 3.2s ease-in-out infinite;
 }
 
 .ground-line {
@@ -845,6 +866,22 @@ textarea:focus-visible {
 
 .button-dark:hover {
   background: #006650;
+}
+
+.button-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.robot-icon {
+  display: inline-block;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.is-loading .robot-icon {
+  animation: robot-bob .55s ease-in-out infinite;
 }
 
 .button-arrow {
@@ -1299,6 +1336,16 @@ textarea:focus-visible {
 
 @keyframes rotate {
   to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes leaf-sway {
+  0%, 100% { transform: rotate(-7deg); }
+  50% { transform: rotate(7deg); }
+}
+
+@keyframes robot-bob {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-8px) rotate(5deg); }
 }
 
 @keyframes spin {
