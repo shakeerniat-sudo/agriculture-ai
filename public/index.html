@@ -225,6 +225,37 @@
                 <div class="field-group full-width" id="crop-health">
                   <label for="crop_problem">Your farming question or request</label>
                   <textarea id="crop_problem" name="crop_problem" rows="4" placeholder="Ask about changing crops, irrigation, weather, soil, pests, symptoms, or another farming question..." required></textarea>
+                  <div class="request-suggestions" aria-label="Example farming questions">
+                    <p class="suggestions-title">Choose an example or write your own</p>
+                    <div class="suggestion-group">
+                      <h3>Crop choice</h3>
+                      <div class="suggestion-options">
+                        <button class="suggestion-chip" type="button" data-request="I want to change my crop. Which crops suit my soil, season, water availability, and local weather?">Suggest suitable crops</button>
+                        <button class="suggestion-chip" type="button" data-request="Which crop is the best alternative to my current crop for this season?">Find an alternative crop</button>
+                      </div>
+                    </div>
+                    <div class="suggestion-group">
+                      <h3>Crop symptoms</h3>
+                      <div class="suggestion-options">
+                        <button class="suggestion-chip" type="button" data-request="My crop has these symptoms: [describe what you see]. What should I check and do next?">Describe crop symptoms</button>
+                        <button class="suggestion-chip" type="button" data-request="How can I check whether pests or disease are affecting my crop?">Check for pests or disease</button>
+                      </div>
+                    </div>
+                    <div class="suggestion-group">
+                      <h3>Water and weather</h3>
+                      <div class="suggestion-options">
+                        <button class="suggestion-chip" type="button" data-request="Should I irrigate my crop now or wait based on soil moisture and the weather forecast?">Decide when to irrigate</button>
+                        <button class="suggestion-chip" type="button" data-request="How will the current weather and next 24-hour forecast affect my crop?">Ask about the weather</button>
+                      </div>
+                    </div>
+                    <div class="suggestion-group">
+                      <h3>Soil and crop care</h3>
+                      <div class="suggestion-options">
+                        <button class="suggestion-chip" type="button" data-request="Is my soil suitable for the crop I am growing, and what should I check?">Check soil suitability</button>
+                        <button class="suggestion-chip" type="button" data-request="What practical steps can help me care for my crop in these farm conditions?">Get crop-care suggestions</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="form-bottom">

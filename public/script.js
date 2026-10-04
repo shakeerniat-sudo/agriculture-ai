@@ -9,8 +9,18 @@ const resultContent = document.getElementById('result-content');
 const languageSelect = document.getElementById('language-select');
 const menuToggle = document.querySelector('.menu-toggle');
 const mainNav = document.getElementById('main-nav');
+const cropProblemInput = document.getElementById('crop_problem');
+const suggestionChips = document.querySelectorAll('.suggestion-chip');
 
 let originalReport = '';
+
+suggestionChips.forEach((chip) => {
+  chip.addEventListener('click', () => {
+    cropProblemInput.value = chip.dataset.request || '';
+    cropProblemInput.focus();
+    cropProblemInput.setSelectionRange(cropProblemInput.value.length, cropProblemInput.value.length);
+  });
+});
 
 function setStatus(message, type = '') {
   statusMessage.textContent = message;
