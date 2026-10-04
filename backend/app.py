@@ -7,22 +7,25 @@ import os
 import sys
 from pathlib import Path
 
+import httpx
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
-from google.genai.errors import APIError
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from agent import AgricultureAgent
+    from weather import WeatherAPIError, WeatherService
 else:
     from .agent import AgricultureAgent
+    from .weather import WeatherAPIError, WeatherService
 
 BASE_DIR = Path(__file__).resolve().parent
 FRONTEND_DIR = BASE_DIR.parent / "public"
 load_dotenv(BASE_DIR / ".env")
 
 app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="")
-agent = AgricultureAgent(api_key=os.getenv("GEMINI_API_KEY"))
+agent = AgricultureAgent(api_key=os.getenv("GROQ_API_KEY"))
+weather_service = WeatherService(api_key=os.getenv("OPENWEATHER_API_KEY"))
 
 
 @app.route("/")
@@ -53,9 +56,7 @@ def analyze():
             "soil_type",
             "season",
             "soil_moisture",
-            "temperature",
-            "rainfall",
-            "rain_probability",
+            "location",
             "crop_problem",
         ]
 
@@ -67,6 +68,10 @@ def analyze():
         if not isinstance(crop, str) or not crop.strip() or len(crop.strip()) > 60:
             return jsonify({"success": False, "error": "Enter a crop name of 60 characters or fewer."}), 400
         payload["crop"] = crop.strip()
+        location = payload.get("location")
+        if not isinstance(location, str) or not location.strip() or len(location.strip()) > 120:
+            return jsonify({"success": False, "error": "Enter a city or town name of 120 characters or fewer."}), 400
+        payload["location"] = location.strip()
 
         allowed_values = {
             "soil_type": {"Loamy", "Clay", "Sandy"},
@@ -77,9 +82,6 @@ def analyze():
 
         numeric_fields = [
             "soil_moisture",
-            "temperature",
-            "rainfall",
-            "rain_probability",
         ]
         invalid = []
         for name in numeric_fields:
@@ -89,30 +91,39 @@ def analyze():
                     invalid.append(name)
                 if name == "soil_moisture" and not (0 <= value <= 100):
                     invalid.append(name)
-                if name == "rain_probability" and not (0 <= value <= 100):
-                    invalid.append(name)
-                if name == "rainfall" and value < 0:
-                    invalid.append(name)
             except (TypeError, ValueError):
                 invalid.append(name)
         if invalid:
             return jsonify({"success": False, "error": "Please enter valid numeric values in the form."}), 400
 
         if not agent.client:
-            return jsonify({"success": False, "error": "Gemini is not configured. Add GEMINI_API_KEY to backend/.env."}), 500
+            return jsonify({"success": False, "error": "Groq is not configured. Add GROQ_API_KEY to the backend environment."}), 500
 
+        weather = weather_service.get_conditions(payload["location"])
+        payload.update(
+            {
+                "temperature": weather["temperature"],
+                "rainfall": weather["forecast_rainfall_mm_24h"],
+                "rain_probability": weather["rain_probability_pct"],
+                "weather": weather,
+            }
+        )
         result = agent.analyze(payload)
         return jsonify(result)
-    except APIError as exc:
-        app.logger.warning("Gemini analysis request failed (%s): %s", exc.code, exc.message)
-        if exc.code == 429:
+    except WeatherAPIError as exc:
+        app.logger.warning("Weather lookup failed (%s): %s", exc.status_code, exc)
+        return jsonify({"success": False, "error": str(exc)}), exc.status_code
+    except httpx.HTTPStatusError as exc:
+        status_code = exc.response.status_code
+        app.logger.warning("Groq analysis request failed (%s): %s", status_code, exc.response.text[:500])
+        if status_code == 429:
             return jsonify({
                 "success": False,
-                "error": "Gemini's daily request limit has been reached. Please try again after the quota resets, or increase the Gemini API quota.",
+                "error": "Groq is temporarily rate-limiting requests. Please wait a moment and try again.",
             }), 429
         return jsonify({
             "success": False,
-            "error": "The Gemini service is temporarily unavailable. Please try again later.",
+            "error": "The Groq AI service is temporarily unavailable. Please try again later.",
         }), 503
     except ValueError as exc:
         return jsonify({"success": False, "error": str(exc)}), 400
@@ -132,20 +143,21 @@ def translate():
             return jsonify({"success": False, "error": "There is no report available to translate."}), 400
 
         if not agent.client:
-            return jsonify({"success": False, "error": "Gemini is not configured. Add GEMINI_API_KEY to backend/.env."}), 500
+            return jsonify({"success": False, "error": "Groq is not configured. Add GROQ_API_KEY to the backend environment."}), 500
 
         translated = agent.translate_report(report, language)
         return jsonify({"success": True, "language": language, "translated_report": translated})
-    except APIError as exc:
-        app.logger.warning("Gemini translation request failed (%s): %s", exc.code, exc.message)
-        if exc.code == 429:
+    except httpx.HTTPStatusError as exc:
+        status_code = exc.response.status_code
+        app.logger.warning("Groq translation request failed (%s): %s", status_code, exc.response.text[:500])
+        if status_code == 429:
             return jsonify({
                 "success": False,
-                "error": "Gemini's daily request limit has been reached. Please try again after the quota resets, or increase the Gemini API quota.",
+                "error": "Groq is temporarily rate-limiting requests. Please wait a moment and try again.",
             }), 429
         return jsonify({
             "success": False,
-            "error": "The Gemini service is temporarily unavailable. Please try again later.",
+            "error": "The Groq AI service is temporarily unavailable. Please try again later.",
         }), 503
     except ValueError as exc:
         return jsonify({"success": False, "error": str(exc)}), 400

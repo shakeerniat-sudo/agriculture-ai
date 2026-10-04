@@ -57,7 +57,14 @@ def irrigation_analysis(soil_moisture: float, rainfall: float, rain_probability:
     return recommendation
 
 
-def weather_analysis(temperature: float, rainfall: float, season: str) -> str:
+def weather_analysis(
+    temperature: float,
+    rainfall: float,
+    rain_probability: float,
+    season: str,
+    description: str = "",
+    humidity: float | None = None,
+) -> str:
     """Summarize weather conditions and their relevance to crop health."""
     season_name = (season or "season").strip().title()
     temp = float(temperature)
@@ -78,6 +85,14 @@ def weather_analysis(temperature: float, rainfall: float, season: str) -> str:
     else:
         details.append("Rainfall is moderate and should support field conditions if distributed evenly.")
 
+    if description:
+        details.append(f"Current local conditions are {description}.")
+    if humidity is not None:
+        details.append(f"Current relative humidity is {humidity}%.")
+    details.append(
+        f"The next 24-hour forecast indicates up to {float(rainfall):.1f} mm of rain "
+        f"with a maximum precipitation probability of {float(rain_probability):.0f}%."
+    )
     details.append(f"Seasonal context: {season_name} is being considered in the decision process.")
     return " ".join(details)
 
@@ -127,6 +142,13 @@ def build_analysis_summary(payload: dict) -> dict:
     return {
         "crop": crop_analysis(crop, soil_type, season, temperature, moisture),
         "irrigation": irrigation_analysis(moisture, rainfall, rain_probability),
-        "weather": weather_analysis(temperature, rainfall, season),
+        "weather": weather_analysis(
+            temperature,
+            rainfall,
+            rain_probability,
+            season,
+            payload.get("weather", {}).get("description", ""),
+            payload.get("weather", {}).get("humidity"),
+        ),
         "health": crop_health_analysis(crop, crop_problem),
     }

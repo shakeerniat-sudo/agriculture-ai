@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="AgriGuide AI combines crop, soil, weather, irrigation and crop-health analysis into practical farm recommendations."
+      content="AgriGuide AI combines crop, soil and live location-based weather data into practical farm recommendations."
     />
     <meta name="theme-color" content="#004d40" />
     <title>AgriGuide AI — Smarter farming, powered by AI</title>
@@ -44,8 +44,6 @@
         <nav class="main-nav" id="main-nav" aria-label="Main navigation">
           <a href="#top">Home</a>
           <a href="#farm-advisor">Farm Advisor</a>
-          <a href="#crop-health">Crop Health</a>
-          <a href="#irrigation">Irrigation</a>
           <a href="#ai-report">AI Reports</a>
           <a href="#about">About</a>
         </nav>
@@ -67,7 +65,7 @@
             <p class="hero-kicker"><span></span> AI-POWERED AGRICULTURE</p>
             <h1>Smarter Farming,<br />Powered by <em>AI.</em></h1>
             <p class="hero-description">
-              Understand your crop, soil, weather and irrigation conditions with an intelligent agriculture AI Agent.
+              Understand your crop, soil and local live weather conditions with an intelligent agriculture AI Agent.
             </p>
             <div class="hero-actions">
               <a class="button button-lime" href="#farm-advisor">
@@ -134,7 +132,7 @@
               <h2>AI that understands<br />your farm.</h2>
             </div>
             <p class="section-lede">
-              AgriGuide AI combines specialized agriculture analysis tools with Gemini AI to provide personalized recommendations grounded in the conditions you share.
+              AgriGuide AI combines specialized agriculture analysis tools, live local weather and Groq AI to provide personalized recommendations.
             </p>
           </div>
 
@@ -149,7 +147,7 @@
               <span class="process-index">02</span>
               <span class="process-icon" aria-hidden="true">⌘</span>
               <h3>Reason</h3>
-              <p>An AI Agent combines specialist findings and Gemini reasoning into one view.</p>
+              <p>An AI Agent combines specialist findings and Groq reasoning into one view.</p>
             </article>
             <article class="process-item">
               <span class="process-index">03</span>
@@ -168,7 +166,7 @@
               <p class="section-eyebrow">Your field, in context</p>
               <h2>Tell AgriGuide AI<br />about your farm.</h2>
             </div>
-            <p>Share what you know about your field. The AI Agent will bring crop, irrigation, weather and crop-health analysis together.</p>
+            <p>Share your crop, soil and location. AgriGuide AI automatically retrieves local weather and combines it with your field details to create a personalized report.</p>
           </div>
 
           <div class="advisor-layout">
@@ -218,16 +216,9 @@
                   <input id="soil_moisture" name="soil_moisture" type="number" min="0" max="100" step="any" placeholder="e.g. 38" required />
                 </div>
                 <div class="field-group">
-                  <label for="temperature">Temperature <small>°C</small></label>
-                  <input id="temperature" name="temperature" type="number" step="any" placeholder="e.g. 29" required />
-                </div>
-                <div class="field-group">
-                  <label for="rainfall">Rainfall <small>mm</small></label>
-                  <input id="rainfall" name="rainfall" type="number" min="0" step="any" placeholder="e.g. 12" required />
-                </div>
-                <div class="field-group">
-                  <label for="rain_probability">Rain probability <small>%</small></label>
-                  <input id="rain_probability" name="rain_probability" type="number" min="0" max="100" step="any" placeholder="e.g. 45" required />
+                  <label for="location">Farm location</label>
+                  <input id="location" name="location" type="text" maxlength="120" placeholder="e.g. Hyderabad, Telangana, India" autocomplete="address-level2" required />
+                  <small class="field-hint">Used to fetch current weather and the next 24-hour forecast.</small>
                 </div>
                 <div class="field-group full-width" id="crop-health">
                   <label for="crop_problem">Crop problem or symptoms</label>
@@ -317,9 +308,9 @@
             <h2>One agent.<br /><span>Four perspectives.</span></h2>
           </div>
           <div class="about-copy">
-            <p>AgriGuide AI is more than a chat interface. Its agriculture agent runs separate crop, irrigation, weather and crop-health analysis tools, then uses Gemini to synthesize a structured report.</p>
+            <p>AgriGuide AI combines crop, soil and crop-health analysis with live local conditions from OpenWeather, then uses Groq to synthesize a structured report.</p>
             <div class="architecture">
-              <span>FARM INPUT</span><b>→</b><span>SPECIALIST TOOLS</span><b>→</b><span>GEMINI AI</span><b>→</b><span>FIELD REPORT</span>
+              <span>FARM INPUT</span><b>→</b><span>OPENWEATHER</span><b>→</b><span>GROQ AI</span><b>→</b><span>FIELD REPORT</span>
             </div>
             <p class="disclaimer">AI-generated recommendations support decision-making only. For severe crop damage, disease identification, or pesticide and fertilizer decisions, consult a qualified agricultural expert.</p>
           </div>

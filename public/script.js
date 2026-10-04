@@ -118,9 +118,7 @@ function getFarmPayload() {
     soil_type: String(formData.get('soil_type') || '').trim(),
     season: String(formData.get('season') || '').trim(),
     soil_moisture: Number(formData.get('soil_moisture')),
-    temperature: Number(formData.get('temperature')),
-    rainfall: Number(formData.get('rainfall')),
-    rain_probability: Number(formData.get('rain_probability')),
+    location: String(formData.get('location') || '').trim(),
     crop_problem: String(formData.get('crop_problem') || '').trim(),
   };
 }
@@ -128,9 +126,6 @@ function getFarmPayload() {
 function validateFarmPayload(payload) {
   const numericValues = [
     ['Soil moisture', payload.soil_moisture, 0, 100],
-    ['Temperature', payload.temperature],
-    ['Rainfall', payload.rainfall, 0],
-    ['Rain probability', payload.rain_probability, 0, 100],
   ];
 
   for (const [label, value, min, max] of numericValues) {
@@ -138,8 +133,8 @@ function validateFarmPayload(payload) {
     if (min !== undefined && value < min) return `${label} must be at least ${min}.`;
     if (max !== undefined && value > max) return `${label} must be no more than ${max}.`;
   }
-  if (!payload.crop || !payload.soil_type || !payload.season || !payload.crop_problem) {
-    return 'Complete each farm detail and describe the crop problem before analyzing.';
+  if (!payload.crop || !payload.soil_type || !payload.season || !payload.location || !payload.crop_problem) {
+    return 'Complete each farm detail, enter your location, and describe the crop problem before analyzing.';
   }
   return '';
 }
@@ -167,7 +162,7 @@ async function submitAnalysis(event) {
   }
 
   setAnalyzeLoading(true);
-  setStatus('The AI Agent is checking crop, irrigation, weather and crop-health conditions…');
+  setStatus('Fetching live weather for your location and preparing your farm analysis...');
 
   try {
     const response = await fetch('/api/analyze', {
