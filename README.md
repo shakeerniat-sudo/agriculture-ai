@@ -37,7 +37,7 @@ Farmer -> Web UI -> Flask Backend -> OpenWeather current conditions and forecast
 
 ## Agriculture report sections
 
-Each report includes a crop analysis based on the entered crop and farm conditions, followed by actions and suggestions tailored to the farmer's actual request. Crop-selection requests receive alternative crop recommendations; symptom reports receive cautious symptom analysis and practical next steps; irrigation, weather, soil, and pest or disease questions receive focused guidance; general farming questions are answered directly. Crop-health diagnoses are not invented for unrelated requests.
+Each report begins with “Your Agriculture Intelligence Report” and contains five sections: Agriculture Analysis, Irrigation Recommendation, Crop Problem Analysis, Recommended Actions, and Important Precautions. These sections are always present, with Crop Problem Analysis and Recommended Actions focused primarily on the farmer's exact request. Crop-selection requests receive alternative crop recommendations; symptom reports receive cautious symptom analysis and practical next steps; irrigation, weather, soil, and pest or disease questions receive focused guidance; general farming questions are answered directly. Crop-health diagnoses are not invented for unrelated requests.
 
 Recommendations must use the supplied farm data and must not invent a diagnosis, crop stage, or unsupported input dosage.
 

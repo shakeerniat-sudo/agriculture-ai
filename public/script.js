@@ -23,7 +23,6 @@ function setAnalyzeLoading(isLoading) {
   const loader = analyzeButton.querySelector('.button-loader');
   analyzeButton.disabled = isLoading;
   label.textContent = isLoading ? 'AI Agent is analyzing your farm…' : 'Analyze My Farm';
-  analyzeButton.classList.toggle('is-loading', isLoading);
   loader.classList.toggle('hidden', !isLoading);
 }
 
@@ -37,9 +36,17 @@ function setTranslateLoading(isLoading) {
 
 function addText(parent, tagName, text) {
   const element = document.createElement(tagName);
-  element.textContent = text;
+  element.textContent = cleanReportFormatting(text);
   parent.append(element);
   return element;
+}
+
+function cleanReportFormatting(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/__(.*?)__/g, '$1')
+    .replace(/(^|[^*])\*(\S(?:.*?\S)?)\*(?!\*)/g, '$1$2')
+    .replace(/(^|\s)_(\S(?:.*?\S)?)_(?=\s|$)/g, '$1$2');
 }
 
 function renderReport(report) {
@@ -52,14 +59,19 @@ function renderReport(report) {
   for (const line of lines) {
     const headingMatch = line.match(/^\s{0,3}#{1,4}\s+(.+?)\s*#*\s*$/);
     if (headingMatch) {
-      currentSection = { heading: headingMatch[1].trim(), body: [] };
+      const heading = headingMatch[1].trim();
+      if (heading.toLowerCase() === 'your agriculture intelligence report') {
+        currentSection = null;
+        continue;
+      }
+      currentSection = { heading: cleanReportFormatting(heading), body: [] };
       sections.push(currentSection);
     } else if (line.trim()) {
       if (!currentSection) {
         currentSection = { heading: 'Agriculture guidance', body: [] };
         sections.push(currentSection);
       }
-      currentSection.body.push(line.trim());
+      currentSection.body.push(cleanReportFormatting(line.trim()));
     }
   }
 

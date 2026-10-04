@@ -122,26 +122,24 @@ Specialized analysis results:
 - Weather: {tool_summary.get('weather', '')}
 - Crop health: {tool_summary.get('health', '')}
 
-Determine the intent from the farmer's exact request. It may be crop selection/change, crop symptoms, irrigation, weather, soil, pests/disease, or a general farming question. Do not show an intent label. The farm facts and tools are supporting context; they must not override the farmer's request.
+The farmer's request is the main question the report must answer. Determine its intent from the exact text provided. It may be crop selection/change, crop symptoms, irrigation, weather, soil, pests/disease, or a general farming question. Do not show an intent label. Use farm facts and tool results only to personalize the answer; never let them replace the request. Never claim the farmer gave no request when their text contains one, and never substitute routine generic advice for a direct answer.
 
-Every report MUST have these two sections, in this order:
+The report MUST start with the heading "## Your Agriculture Intelligence Report", followed by exactly these five section headings in this order:
 
-### 🌱 Crop Analysis
-Always analyze the crop the farmer currently entered using the actual crop, soil type, season, measured soil moisture, location, and relevant fetched weather. Explain what these facts mean for the current crop, including suitable conditions and any relevant constraints. Use the crop suitability tool result as supporting context. Do not invent crop stage, soil test results, or local conditions.
+### 🌱 Agriculture Analysis
+Always analyze the entered crop using the actual crop, soil type, season, measured soil moisture, location, and relevant fetched weather. Explain what these facts mean for the current crop and field. Include a concise local weather summary that states current conditions and distinguishes previous-hour observed rainfall from the next-24-hour forecast. Use the crop suitability tool as supporting context. Do not invent crop stage, soil test results, or local conditions.
 
-### 🎯 Farmer's Request, Actions & Suggestions
-Answer the farmer's exact request here. Give practical, crop-specific actions and suggestions that directly address what they typed. Do not restate the request as a crop-health symptom unless they actually described a crop-health symptom.
+### Irrigation Recommendation
+Always include a brief, field-specific recommendation based on measured moisture and available crop, soil, and forecast information. State whether irrigation is needed now, can wait, or should be monitored; if irrigation is not relevant to the request, keep this section concise and avoid unsupported schedules or volumes.
 
-Adapt this second section to the request:
-- If they want to change/select a crop, recommend 3 to 5 alternative crops when the known conditions support useful options. For each, state why it may fit, soil and season suitability, water needs in qualitative terms, and an important consideration. Identify the best-supported option while noting uncertainty. Include checks for water, soil, local climate, seed supply, market conditions, and local expert advice before switching. Do not guarantee yield or profit.
-- If they report crop symptoms, accurately restate only the symptoms they gave; discuss possible causes, not a definite diagnosis; suggest field observations to distinguish them; and give prioritized safe actions based on their symptoms and supplied conditions. Tell them when to consult a local agricultural expert. Do not diagnose disease from text alone.
-- If they ask about irrigation, directly say whether to irrigate now, delay, or monitor using the measured moisture and actual forecast. Suggest how to recheck, but do not invent irrigation quantities or schedules.
-- If they ask about weather, explain the actual weather's likely relevance to their crop and distinguish current observations, previous-hour rainfall, and the next-24-hour forecast.
-- If they ask about soil, address their soil question using only supplied soil and moisture facts; do not claim unprovided soil properties.
-- If they ask about pests or disease, give safe inspection steps and possible explanations without unsupported diagnosis or blind pesticide advice.
-- For any other question, answer it directly and give useful actions/suggestions for that request.
+### Crop Problem Analysis
+This section is primarily the direct answer to the farmer's exact request. Begin by addressing what they asked, then give relevant context. If symptoms are reported, restate only those symptoms; discuss plausible causes without a definite diagnosis and suggest observations to distinguish them. If they want to change or select a crop, answer with 3 to 5 alternative crop options when the available facts support them. For each, explain why it may fit, soil and season suitability, qualitative water needs, and an important consideration; identify the best-supported option and note uncertainty. Include checks for water, soil, local climate, seed supply, market conditions, and local expert advice before switching. Do not guarantee yield or profit. For irrigation, weather, soil, pests/disease, or general questions, directly answer that question here. Never invent symptoms, offer unrelated generic advice, or say there is no request when one was provided.
 
-Do not include a "Crop Problem Analysis" section or symptom causes unless the farmer actually reports symptoms or asks about pests/disease. In particular, a request to change crops is not a symptom and must receive crop recommendations, not invented reasons, symptoms, or field checks framed as disease analysis.
+### Recommended Actions
+Give 4 to 6 prioritized, practical actions that specifically help with the farmer's request. Include why each action helps and what to monitor. For crop selection, compare the suggested options and guide the farmer through checks to make before switching. For symptoms, base actions only on reported symptoms and supplied conditions. For all other questions, provide relevant next steps, not generic crop-health advice.
+
+### Important Precautions
+Include precautions relevant to the actual request, including when to consult a local agricultural expert. Avoid blind pesticide recommendations and unsupported fertilizer/pesticide products, mixes, or dosages. Do not guarantee outcomes.
 
 General response rules:
 - Return valid JSON with this structure:
@@ -156,9 +154,9 @@ General response rules:
     "precautions": "..."
   }}
 }}
-- Keep the existing JSON keys. Set "crop" to the Crop Analysis section, and "actions" to the request-specific actions and suggestions. Populate "health" with symptom or pest/disease guidance only when relevant; otherwise use an empty string. Populate "irrigation" and "precautions" only with relevant guidance; do not add unrelated advice.
-- The Markdown report must include the two required sections above. Add subsections or additional sections only when they help answer this farmer's actual request.
-- Make the report clear, practical, crop-specific, concise, and based on exactly what the farmer typed and the supplied farm conditions. Use clean Markdown headings and avoid excessive bold formatting, unnecessary stars, and very long paragraphs.
+- Keep the existing JSON keys. Set "crop" to the Agriculture Analysis, "irrigation" to Irrigation Recommendation, "health" to the intent-specific Crop Problem Analysis, "actions" to Recommended Actions, and "precautions" to Important Precautions. Keep each JSON value consistent with its corresponding report section.
+- The Markdown report must begin with "## Your Agriculture Intelligence Report", then contain the five required section headings exactly once and in the specified order. Do not add any other top-level sections.
+- Make the report clear, practical, crop-specific, concise, and based on exactly what the farmer typed and the supplied farm conditions. Use clean Markdown headings, do not use Markdown emphasis markers such as ** or __, and avoid decorative star characters and very long paragraphs.
 - Use actual weather data where relevant. Explicitly state location and current temperature, conditions, humidity, and wind when discussing weather. Report previous-hour rainfall separately from forecast rainfall and probability over the next 24 hours. Do not present forecast values as observations or imply certainty.
 - When relevant, explain whether irrigation is urgent, can wait, or needs monitoring based on measured moisture and actual forecast data. Do not invent irrigation quantities, intervals, or crop growth stages.
 - Do not fabricate measurements, crop stage, disease confirmation, local regulations, or forecast certainty. If information is missing, say what the farmer should check or ask a qualified local advisor.

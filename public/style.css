@@ -384,7 +384,6 @@ textarea:focus-visible {
   display: grid;
   min-height: 510px;
   place-items: center;
-  animation: rise-in .85s .1s ease both;
 }
 
 .orbit {
@@ -406,7 +405,6 @@ textarea:focus-visible {
   aspect-ratio: 1;
   border-style: dashed;
   border-color: rgba(255, 255, 255, .19);
-  animation: rotate 68s linear infinite;
 }
 
 .hero-plant {
@@ -434,32 +432,11 @@ textarea:focus-visible {
   fill: url(#leaf);
   stroke: rgba(216, 232, 0, .75);
   stroke-width: 1.1;
-  transform-box: view-box;
-  animation: leaf-sway 3.2s ease-in-out infinite;
-}
-
-.leaf-left,
-.vein-left {
-  transform-origin: 146px 286px;
-}
-
-.leaf-right,
-.vein-right {
-  transform-origin: 300px 241px;
-  animation-delay: -1.1s;
-}
-
-.leaf-top,
-.vein-top {
-  transform-origin: 251px 154px;
-  animation-delay: -2.2s;
 }
 
 .leaf-vein {
   stroke: rgba(0, 77, 64, .58);
   stroke-width: 2.5;
-  transform-box: view-box;
-  animation: leaf-sway 3.2s ease-in-out infinite;
 }
 
 .ground-line {
@@ -880,10 +857,6 @@ textarea:focus-visible {
   line-height: 1;
 }
 
-.is-loading .robot-icon {
-  animation: robot-bob .55s ease-in-out infinite;
-}
-
 .button-arrow {
   color: var(--lime);
   font-size: 1rem;
@@ -1011,6 +984,8 @@ textarea:focus-visible {
 
 .tool-list {
   width: 100%;
+  display: grid;
+  gap: 9px;
   margin: auto 0 0;
   padding: 0;
   list-style: none;
@@ -1018,18 +993,42 @@ textarea:focus-visible {
 
 .tool-list li {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  border-top: 1px solid rgba(255, 255, 255, .12);
+  align-items: flex-start;
+  gap: 11px;
+  padding: 11px 12px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  background: rgba(0, 47, 39, .26);
   color: rgba(255, 255, 255, .84);
-  font-size: .7rem;
 }
 
-.tool-list li span {
+.tool-list .tool-number {
+  display: grid;
+  width: 27px;
+  height: 27px;
+  flex: 0 0 27px;
+  place-items: center;
+  border: 1px solid rgba(216, 232, 0, .28);
+  background: rgba(216, 232, 0, .08);
   color: var(--lime);
   font-size: .58rem;
   font-weight: 700;
+}
+
+.tool-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.tool-copy strong {
+  color: var(--white);
+  font-size: .69rem;
+  line-height: 1.35;
+}
+
+.tool-copy small {
+  color: rgba(255, 255, 255, .58);
+  font-size: .61rem;
+  line-height: 1.45;
 }
 
 .report-section-wrap {
@@ -1332,20 +1331,6 @@ textarea:focus-visible {
 @keyframes rise-in {
   from { opacity: 0; transform: translateY(13px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes rotate {
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-@keyframes leaf-sway {
-  0%, 100% { transform: rotate(-7deg); }
-  50% { transform: rotate(7deg); }
-}
-
-@keyframes robot-bob {
-  0%, 100% { transform: translateY(0) rotate(-5deg); }
-  50% { transform: translateY(-8px) rotate(5deg); }
 }
 
 @keyframes spin {
