@@ -29,15 +29,17 @@ Farmer -> Web UI -> Flask Backend -> OpenWeather current conditions and forecast
 ## AI Agent workflow
 
 1. The farmer submits crop, soil, season, location, and crop symptoms.
-2. The backend validates the request and fetches current weather and the next 24-hour forecast for the location.
+2. The backend validates the request and attempts to fetch current weather and the next 24-hour forecast for the location.
 3. The Agriculture Agent combines live weather data with crop, irrigation, and crop-health analysis.
 4. Tool outputs are merged into a detailed prompt.
-5. Groq generates a structured agricultural report.
+5. Groq generates a structured agricultural report. If weather or Groq is unavailable, the backend returns a complete, clearly labeled built-in guidance report instead of a blank report.
 6. The farmer can translate the original report into a regional language.
 
 ## Agriculture report sections
 
-Each report begins with “Your Agriculture Intelligence Report” and contains five sections: Agriculture Analysis, Irrigation Recommendation, Crop Problem Analysis, Recommended Actions, and Important Precautions. These sections are always present, with Crop Problem Analysis and Recommended Actions focused primarily on the farmer's exact request. Crop-selection requests receive alternative crop recommendations; symptom reports receive cautious symptom analysis and practical next steps; irrigation, weather, soil, and pest or disease questions receive focused guidance; general farming questions are answered directly. Crop-health diagnoses are not invented for unrelated requests.
+Each report begins with “Your Agriculture Intelligence Report” and retains five core sections: Agriculture Analysis, Irrigation Recommendation, Crop Problem Analysis, Recommended Actions, and Important Precautions. These sections are always present, with Crop Problem Analysis and Recommended Actions focused primarily on the farmer's exact request. Crop-selection requests receive alternative crop recommendations; symptom reports receive cautious symptom analysis and practical next steps; irrigation, weather, soil, and pest or disease questions receive focused guidance; general farming questions are answered directly. Crop-health diagnoses are not invented for unrelated requests.
+
+The report also includes a Future Weather Analysis section generated from the daily temperature, rainfall, and rain-probability summaries in the existing OpenWeather forecast response. If forecast records are unavailable, it states that clearly instead of creating forecast values.
 
 Recommendations must use the supplied farm data and must not invent a diagnosis, crop stage, or unsupported input dosage.
 
@@ -159,4 +161,4 @@ These tool outputs are then combined and passed to the Groq LLM for final reason
 
 - The app does not expose the Groq API key to the frontend.
 - All analysis requests are processed through the Flask backend.
-- The translation feature always uses the original AI report as the source and never translates an already translated version.
+- The translation feature always uses the original AI report as the source and never translates an already translated version. If a translation omits a report section or its content, the original section content is shown rather than an empty card. If Groq rate-limits the configured model, translation retries with a smaller Groq model.

@@ -970,6 +970,10 @@ textarea:focus-visible {
   color: var(--forest-mid);
 }
 
+.status-message.info {
+  color: #775b12;
+}
+
 .advisor-aside {
   position: relative;
   display: flex;

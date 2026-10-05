@@ -14,9 +14,11 @@ from flask import Flask, jsonify, request, send_from_directory
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from agent import AgricultureAgent
+    from tools import future_weather_analysis
     from weather import WeatherAPIError, WeatherService
 else:
     from .agent import AgricultureAgent
+    from .tools import future_weather_analysis
     from .weather import WeatherAPIError, WeatherService
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -96,35 +98,71 @@ def analyze():
         if invalid:
             return jsonify({"success": False, "error": "Please enter valid numeric values in the form."}), 400
 
-        if not agent.client:
-            return jsonify({"success": False, "error": "Groq is not configured. Add GROQ_API_KEY to the backend environment."}), 500
+        try:
+            weather = weather_service.get_conditions(payload["location"])
+        except WeatherAPIError as exc:
+            app.logger.warning(
+                "Weather lookup failed (%s); continuing without live weather.",
+                exc.status_code,
+            )
+            payload.update(
+                {
+                    "temperature": None,
+                    "rainfall": None,
+                    "rain_probability": None,
+                    "weather": {},
+                }
+            )
+        else:
+            payload.update(
+                {
+                    "temperature": weather["temperature"],
+                    "rainfall": weather["forecast_rainfall_mm_24h"],
+                    "rain_probability": weather["rain_probability_pct"],
+                    "weather": weather,
+                }
+            )
 
-        weather = weather_service.get_conditions(payload["location"])
-        payload.update(
-            {
-                "temperature": weather["temperature"],
-                "rainfall": weather["forecast_rainfall_mm_24h"],
-                "rain_probability": weather["rain_probability_pct"],
-                "weather": weather,
-            }
+        if not agent.client:
+            app.logger.warning("Groq is not configured; returning built-in farm guidance.")
+            result = agent.build_local_fallback(payload)
+        else:
+            try:
+                result = agent.analyze(payload)
+                if not isinstance(result.get("report"), str) or not result["report"].strip():
+                    raise ValueError("Groq returned a report without content.")
+            except (httpx.HTTPError, ValueError) as exc:
+                app.logger.warning(
+                    "Groq analysis failed (%s); returning built-in farm guidance.",
+                    type(exc).__name__,
+                )
+                result = agent.build_local_fallback(payload)
+        weather_data = payload.get("weather")
+        forecast_days = weather_data.get("forecast_days", []) if isinstance(weather_data, dict) else []
+        future_weather_section = future_weather_analysis(
+            crop=payload["crop"],
+            soil_type=payload["soil_type"],
+            season=payload["season"],
+            soil_moisture=float(payload["soil_moisture"]),
+            location=payload["location"],
+            forecast_days=forecast_days,
         )
-        result = agent.analyze(payload)
+        report = result["report"]
+        irrigation_heading = "\n### Irrigation Recommendation"
+        insertion_point = report.find(irrigation_heading)
+        if insertion_point < 0:
+            report = f"{report.rstrip()}\n\n{future_weather_section}"
+        else:
+            report = (
+                f"{report[:insertion_point].rstrip()}\n\n"
+                f"{future_weather_section}\n"
+                f"{report[insertion_point:]}"
+            )
+        result["report"] = report
+        analysis = result.setdefault("analysis", {})
+        if isinstance(analysis, dict):
+            analysis["future_weather"] = future_weather_section
         return jsonify(result)
-    except WeatherAPIError as exc:
-        app.logger.warning("Weather lookup failed (%s): %s", exc.status_code, exc)
-        return jsonify({"success": False, "error": str(exc)}), exc.status_code
-    except httpx.HTTPStatusError as exc:
-        status_code = exc.response.status_code
-        app.logger.warning("Groq analysis request failed (%s): %s", status_code, exc.response.text[:500])
-        if status_code == 429:
-            return jsonify({
-                "success": False,
-                "error": "Groq is temporarily rate-limiting requests. Please wait a moment and try again.",
-            }), 429
-        return jsonify({
-            "success": False,
-            "error": "The Groq AI service is temporarily unavailable. Please try again later.",
-        }), 503
     except ValueError as exc:
         return jsonify({"success": False, "error": str(exc)}), 400
     except Exception:  # pragma: no cover - broad fallback for server-side safety

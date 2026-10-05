@@ -59,17 +59,15 @@ function cleanReportFormatting(text) {
     .replace(/(^|\s)_(\S(?:.*?\S)?)_(?=\s|$)/g, '$1$2');
 }
 
-function renderReport(report) {
-  resultContent.replaceChildren();
-
+function parseReportSections(report) {
   const sections = [];
   let currentSection = null;
   const lines = String(report || '').replace(/\r\n/g, '\n').split('\n');
 
   for (const line of lines) {
-    const headingMatch = line.match(/^\s{0,3}#{1,4}\s+(.+?)\s*#*\s*$/);
+    const headingMatch = line.match(/^\s{0,3}(#{1,4})\s+(.+?)\s*#*\s*$/);
     if (headingMatch) {
-      const heading = headingMatch[1].trim();
+      const heading = headingMatch[2].trim();
       if (heading.toLowerCase() === 'your agriculture intelligence report') {
         currentSection = null;
         continue;
@@ -85,7 +83,56 @@ function renderReport(report) {
     }
   }
 
-  for (const section of sections) {
+  return sections;
+}
+
+function renderReport(report, analysis = {}, sourceReport = '') {
+  resultContent.replaceChildren();
+  if (!analysis || typeof analysis !== 'object') analysis = {};
+
+  let sections = parseReportSections(report);
+  const sourceSections = sourceReport ? parseReportSections(sourceReport) : [];
+  let usedSourceFallback = false;
+  if (
+    sourceSections.length > 0
+    && sections.length === sourceSections.length + 1
+    && sections[0].body.length === 0
+  ) {
+    sections.shift();
+  }
+  if (sourceSections.length > 0 && sections.length !== sourceSections.length) {
+    sections = sourceSections;
+    usedSourceFallback = true;
+  }
+
+  sections.forEach((section, index) => {
+    if (!section.body.length) {
+      const heading = section.heading.toLowerCase();
+      const analysisKey = heading.includes('future weather')
+        ? 'future_weather'
+        : heading.includes('agriculture analysis') || heading.includes('crop analysis')
+          ? 'crop'
+          : heading.includes('irrigation')
+            ? 'irrigation'
+            : heading.includes('crop problem')
+              ? 'health'
+              : heading.includes('recommended actions')
+                ? 'actions'
+                : heading.includes('precautions')
+                  ? 'precautions'
+                  : null;
+      const fallbackText = analysisKey ? analysis[analysisKey] : null;
+      const sourceBody = sourceSections[index]?.body.join('\n');
+      if (typeof fallbackText === 'string' && fallbackText.trim()) {
+        section.body.push(fallbackText.trim());
+      } else if (sourceBody) {
+        section.body.push(sourceBody);
+        usedSourceFallback = true;
+      } else {
+        section.body.push('No details were returned for this section. Please review your request and try the analysis again.');
+      }
+    }
+
     const block = document.createElement('section');
     block.className = 'report-block';
     addText(block, 'h3', section.heading);
@@ -123,7 +170,7 @@ function renderReport(report) {
     }
     flushParagraph();
     resultContent.append(block);
-  }
+  });
 
   if (!sections.length) {
     const block = document.createElement('section');
@@ -132,6 +179,7 @@ function renderReport(report) {
     addText(block, 'p', String(report || 'No report content was returned.'));
     resultContent.append(block);
   }
+  return usedSourceFallback;
 }
 
 function getFarmPayload() {
@@ -200,10 +248,17 @@ async function submitAnalysis(event) {
     }
 
     originalReport = data.report;
-    renderReport(originalReport);
+    renderReport(originalReport, data.analysis);
     reportPlaceholder.classList.add('hidden');
     reportCard.classList.remove('hidden');
-    setStatus('Your farm analysis is ready.', 'success');
+    if (data.mode === 'local_fallback') {
+      setStatus(
+        'The AI service could not be reached. Built-in guidance based on your farm details is shown below.',
+        'info',
+      );
+    } else {
+      setStatus('Your farm analysis is ready.', 'success');
+    }
     document.getElementById('ai-report').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (error) {
     const message = error.name === 'TimeoutError'
@@ -237,8 +292,13 @@ async function translateReport(event) {
       throw new Error('The translation service returned an empty report. Please try again.');
     }
 
-    renderReport(data.translated_report);
-    setStatus(`Your report is now shown in ${language}.`, 'success');
+    const usedSourceFallback = renderReport(data.translated_report, {}, originalReport);
+    setStatus(
+      usedSourceFallback
+        ? `Some translated content was incomplete, so the original report text is shown for those sections.`
+        : `Your report is now shown in ${language}.`,
+      usedSourceFallback ? 'info' : 'success',
+    );
   } catch (error) {
     const message = error.name === 'TimeoutError'
       ? 'Translation took too long. Please check your connection and try again.'

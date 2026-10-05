@@ -1,4 +1,4 @@
-"""OpenWeather integration for current conditions and short-term rainfall forecasts."""
+"""OpenWeather integration for current conditions and forecast data."""
 
 from __future__ import annotations
 
@@ -74,18 +74,70 @@ class WeatherService:
                 "The weather service could not be reached. Please try again shortly.",
             ) from exc
 
-        forecast_entries = forecast.get("list", [])[:8]
+        all_forecast_entries = forecast.get("list", [])
+        forecast_entries_24h = all_forecast_entries[:8]
         rainfall_24h_mm = sum(
             float(entry.get("rain", {}).get("3h", 0) or 0)
-            for entry in forecast_entries
+            for entry in forecast_entries_24h
         )
         rain_probability_pct = max(
             (
                 float(entry.get("pop", 0) or 0) * 100
-                for entry in forecast_entries
+                for entry in forecast_entries_24h
             ),
             default=0.0,
         )
+        daily_forecasts: dict[str, dict[str, Any]] = {}
+        for entry in all_forecast_entries:
+            date = str(entry.get("dt_txt", "")).split(" ", maxsplit=1)[0]
+            main = entry.get("main", {})
+            if not date or not isinstance(main, dict):
+                continue
+
+            day = daily_forecasts.setdefault(
+                date,
+                {
+                    "date": date,
+                    "min_temperature": None,
+                    "max_temperature": None,
+                    "rainfall_mm": 0.0,
+                    "rain_probability_pct": 0.0,
+                    "conditions": [],
+                },
+            )
+            temperatures = [
+                float(main[key])
+                for key in ("temp_min", "temp_max")
+                if main.get(key) is not None
+            ]
+            if not temperatures and main.get("temp") is not None:
+                temperatures = [float(main["temp"])]
+            if temperatures:
+                daily_min = min(temperatures)
+                daily_max = max(temperatures)
+                day["min_temperature"] = (
+                    daily_min
+                    if day["min_temperature"] is None
+                    else min(day["min_temperature"], daily_min)
+                )
+                day["max_temperature"] = (
+                    daily_max
+                    if day["max_temperature"] is None
+                    else max(day["max_temperature"], daily_max)
+                )
+
+            day["rainfall_mm"] += float(entry.get("rain", {}).get("3h", 0) or 0)
+            day["rain_probability_pct"] = max(
+                day["rain_probability_pct"],
+                float(entry.get("pop", 0) or 0) * 100,
+            )
+            weather_items = entry.get("weather", [])
+            if weather_items:
+                condition = weather_items[0].get("description")
+                if condition and condition not in day["conditions"]:
+                    day["conditions"].append(str(condition))
+
+        upcoming_days = list(daily_forecasts.values())[:5]
         weather_items = current.get("weather", [])
         description = (
             weather_items[0].get("description", "conditions unavailable")
@@ -104,6 +156,7 @@ class WeatherService:
             "current_rainfall_mm": float(current.get("rain", {}).get("1h", 0) or 0),
             "forecast_rainfall_mm_24h": rainfall_24h_mm,
             "rain_probability_pct": rain_probability_pct,
+            "forecast_days": upcoming_days,
         }
 
     @staticmethod
